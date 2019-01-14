@@ -4,6 +4,10 @@
 
 #include "Define.h"
 #include "Table.h"
+#include "AVL.h"
+#include "Value_ID_Index_Node.h"
+#include "ID_Index_Node.h"
+#include "AVL_Data_Node.h"
 
 
 /*
@@ -19,6 +23,12 @@
  */
 
 MyDatabase SQL; //定义全局变量，方便使用
+
+template <typename T>
+void cout_T(T data)
+{
+	cout << data << endl;
+}
 
 void helper(Command &command){
     //TODO
@@ -44,9 +54,10 @@ void loadData(const char *file)
 	//确定文件打开成功
 	string get_data;
 	getline(data_file, get_data);
+	SQL.Read_Table_Name(1, get_data); //获取表名
 	/*cout << get_data << endl;*/
 	getline(data_file, get_data);
-	SQL.Read_Key_List(1, get_data);
+	SQL.Read_Key_List(1, get_data); //获取属性列表
 
 	//get_data.clear();
 	//getline(data_file, get_data);
@@ -85,6 +96,35 @@ int main(int argc, char const *argv[])
     single_tester.exec();
     INFO("=====================================\n");
 
+	AVL<AVL_Data_Node<int> > test;
+	AVL_Data_Node<int> a(64, 234,1);
+	AVL_Data_Node<int> b(64, 237, 2);
+	AVL_Data_Node<int> c(23, 256, 3);
+	AVL_Data_Node<int> d(75, 222, 4);
+	AVL_Data_Node<int> e(64, 236, 5);
+	//cout << a << endl;
+	/*test.insert(64);
+	test.insert(71);
+	test.insert(62);
+	test.insert(25);
+	test.insert(11);
+	test.insert(23);
+	test.insert(27);
+	test.insert(83);
+	test.insert(70);*/
+
+	//cout << "?" << endl;
+	test.insert(a);
+	test.insert(b);
+	test.insert(c);
+	test.insert(d);
+	test.insert(e);
+	
+	test.travIn(cout_T<AVL_Data_Node<int> >); cout << endl;
+	//cout << "!" << endl;
+	//cout<<test.search()
+	//test.remove(27);
+	//test.travIn(cout_T<int>); cout << endl;
     ////区间测试1
     //TEST_TYPE = 1;
     //loadData("data_section1.txt");

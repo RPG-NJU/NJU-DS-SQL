@@ -16,7 +16,7 @@ using namespace std;
 
 #pragma warning(disable:4996) // 由于在VS环境下编译，依照助教的指示，添加此条
 
-class Record 
+class Record //由于与自己的思想不是非常的契合，目前该类处于弃置状态
 {
 	static int attrc;
 	static char attr_name[MAX_COL_SIZE][MAX_ATTR_LEN];

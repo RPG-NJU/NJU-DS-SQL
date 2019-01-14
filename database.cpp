@@ -30,3 +30,14 @@ void MyDatabase::Read_Data(int i, ifstream& file)
 	}
 }
 
+void MyDatabase::Read_Table_Name(int i, string table_name)
+{
+	switch (i)
+	{
+	case 1:table1.Read_Table_Name(table_name); break;
+	case 2:table2.Read_Table_Name(table_name); break;
+	default:break;
+	}
+}
+
+

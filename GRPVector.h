@@ -32,9 +32,10 @@ public:
 	bool empty() const;
 	void clear();
 
-	T& front();
+	const T front();
 	T& back();
 	T& operator[](int i);
+	const T& operator[](int i) const;
 
 	void insert(int i, const T &add);
 	void erase(int i);
@@ -127,9 +128,31 @@ T& GRPVector<T>::operator[](int i)
 }
 
 template <typename T>
-T& GRPVector<T>::front()
+const T& GRPVector<T>::operator[](int i) const
 {
-	return (*this)[0];
+	if ((i < static_cast<int>(real_size)) && (i >= -static_cast<int>(real_size)))
+	{
+		if (i >= 0)
+			return data[i];
+		else
+			return data[this->size() + i];
+	}
+
+	else
+	{
+		cout << "This GRPVector's size is " << real_size << endl;
+		cout << "You should not read the place [" << i << "]" << endl;
+		exit(-1);
+	}
+}
+
+
+template <typename T>
+const T GRPVector<T>::front()
+{
+	T x = data[0];
+	//return (*this)[0];
+	return x;
 }
 
 template <typename T>
@@ -199,17 +222,28 @@ GRPVector<T>& GRPVector<T>::operator=(const GRPVector& copy)
 		//this->push_back(copy[i]);
 		this->data[i] = copy.data[i];
 	}
+	this->real_size = copy.real_size;
+	this->max_size = copy.max_size;
 	return *this;
 }
 
 template <typename T>
 GRPVector<T>::GRPVector(const GRPVector& x)
 {
-	this->clear();
+	/*this->clear();
 	for (int i(0); i < x.size(); ++i)
 	{
 		this->push_back(x[i]);
+	}*/
+	this->data = new T[x.max_size];
+	for (int i(0); i < x.size(); ++i)
+	{
+		//this->push_back(copy[i]);
+		this->data[i] = x.data[i];
 	}
+	this->real_size = x.real_size;
+	this->max_size = x.max_size;
+	//return *this;
 	//return *this;
 }
 

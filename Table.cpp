@@ -7,6 +7,11 @@ Table::Table() : Table("") {}
 void Table::Read_Table_Name(string table_name)
 {
 	this->table_name = table_name;
+#ifdef EVERY_STEP_SHOW
+	printf(LIGHT_GREEN "<TABLE NAME>  " NONE);
+	cout << this->table_name << endl;
+#endif
+
 }
 
 void Table::Read_Key_List(string key_list)
@@ -70,7 +75,7 @@ void Table::Read_Data(std::ifstream& file)
 			++i;
 			word.clear();
 		} //while (data_line);
-		data.push_back(a_data);
+		data.push_back(a_data); //此时的a_data是一条完整的数据，可以依照这个进行搜索树的建立，就可以减少一次O(n)的遍历
 #ifdef GET_DATAFILE_SHOW
 		printf(LIGHT_BLUE "<GET DATA LINE>  " NONE);
 		cout << "[" << a_data.id << "] {" << a_data.name << "} ";
@@ -83,4 +88,9 @@ void Table::Read_Data(std::ifstream& file)
 		a_data.value.clear();
 		std::getline(file, get_data_line);
 	}
+#ifdef EVERY_STEP_SHOW
+	printf(LIGHT_GREEN "<DATA SIZE>  " NONE);
+	cout << data.size() << " lines" << endl;
+#endif
+
 }
