@@ -42,9 +42,9 @@ public:
 	friend ifstream & operator >> (ifstream &input, Command &command);
 };
 
-ifstream & operator >> (ifstream &input, Record &record); //这段函数的重载意义与command的重载类似，但是代码中没有进行使用，而是自己进行拆分，具体在Table类中有定义
+static ifstream & operator >> (ifstream &input, Record &record); //这段函数的重载意义与command的重载类似，但是代码中没有进行使用，而是自己进行拆分，具体在Table类中有定义
 ifstream & operator >> (ifstream &input, Command &command); //在助教提供的框架代码中直接使用了这一段重载，故没有进行更改
 
 void INFO(const char* msg);
-void helper(Command &command);
+void helper(Command &command, ofstream &file);
 void loadData(char *datafile);

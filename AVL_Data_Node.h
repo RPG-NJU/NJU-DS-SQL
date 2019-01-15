@@ -11,8 +11,13 @@ template <typename T>
 class AVL_Data_Node;
 
 template <typename T>
-bool operator< (const AVL_Data_Node<T> &x, const AVL_Data_Node<T> &y);
-
+static bool operator< (const AVL_Data_Node<T> &x, const AVL_Data_Node<T> &y);
+template <typename T>
+static bool operator> (const AVL_Data_Node<T> &x, const AVL_Data_Node<T> &y);
+template <typename T>
+static bool operator== (const AVL_Data_Node<T> &x, const AVL_Data_Node<T> &y);
+template <typename T>
+static ostream& operator<< (ostream &os, const AVL_Data_Node<T> &x);
 template <typename T>
 class AVL_Data_Node
 {
@@ -23,6 +28,8 @@ public:
 	//成员函数
 	AVL_Data_Node(T value, ID_Index_Node a_index) : value(value) { _index.push_back(a_index); } //只有一个初始值的构造函数
 	AVL_Data_Node(T value, int id, int index) : value(value) { const ID_Index_Node x(id, index); _index.push_back(x); /*cout << _index.size() << endl;*/ }
+
+	void ReLoad(T value, int id, int index);
 
 	void Add(ID_Index_Node x);
 
@@ -79,10 +86,19 @@ void AVL_Data_Node<T>::Add(const ID_Index_Node x)
 }
 
 template <typename T>
-ostream& operator<<(ostream &os, const AVL_Data_Node<T> &x)
+static ostream& operator<<(ostream &os, const AVL_Data_Node<T> &x)
 {
 	os << x.value << ":  ";
 	for (int i(0); i < x._index.size(); ++i)
 		os << "[" << x._index[i].id << " " << x._index[i].index << "] ";
 	return os;
+}
+
+template <typename T>
+void AVL_Data_Node<T>::ReLoad(T value, int id, int index)
+{
+	this->value = value;
+	const ID_Index_Node x(id, index); 
+	_index[0] = x;
+	return;
 }

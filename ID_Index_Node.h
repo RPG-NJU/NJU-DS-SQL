@@ -12,7 +12,7 @@ bool operator>=(const ID_Index_Node &x, const ID_Index_Node &y);
 bool operator<(const ID_Index_Node &x, const ID_Index_Node &y);
 bool operator<=(const ID_Index_Node &x, const ID_Index_Node &y);
 bool operator!=(const ID_Index_Node &x, const ID_Index_Node &y);
-ostream& operator<<(ostream &os, const ID_Index_Node &x);
+static ostream& operator<<(ostream &os, const ID_Index_Node &x);
 
 class ID_Index_Node //因为没有了value，所以不需要使用模板类，但是仍然都在头文件中定义，保持自定义节点类的统一性
 {
@@ -35,7 +35,7 @@ public:
 	friend ostream& operator<<(ostream &os, const ID_Index_Node &x);
 };
 
-ostream& operator<<(ostream& os, const ID_Index_Node& x)
+static ostream& operator<<(ostream& os, const ID_Index_Node& x)
 {
 	os << "[" << x.id << " " << x.index << " " << "]";
 	return os;

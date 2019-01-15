@@ -1,7 +1,10 @@
 #include "common.h"
 #include "test.h"
+//#include "Table.h"
 
 #include "Define.h"
+
+
 
 void Timer::tic(char t[]) //输出传入的字符串，并且开启计时
 {
@@ -36,18 +39,20 @@ Tester::Tester(const char *test_file, const char *result_file)
     assert((fin && fout) || (INFO("open file failed!"), 0));
 }
 
-Tester::~Tester(){
+Tester::~Tester()
+{
     fin.close();
     fout.close();
 }
 
-void Tester::exec(){
+void Tester::exec()
+{
     Command command; //命令类，其中重载了操作符>>，所以fin>>不是简单的读入，已经分割完成
     Timer timer;
     timer.tic(test_name);
     while (fin >> command) //不断捕获命令，并且对命令进行执行，通过helper函数
 	{
-        helper(command);
+        helper(command, fout);
     }
     timer.toc();
 }

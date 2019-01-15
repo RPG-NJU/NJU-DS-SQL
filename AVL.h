@@ -1,4 +1,7 @@
+#pragma once
+
 #include "BST.h" //基于BST实现AVL树
+//#include "AVL_Data_Node.h"
 template <typename T> class AVL : public BST<T> { //由BST派生AVL树模板类
 public:
 	BinNodePosi(T) insert(const T& e); //插入（重写）

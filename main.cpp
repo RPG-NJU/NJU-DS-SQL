@@ -30,7 +30,8 @@ void cout_T(T data)
 	cout << data << endl;
 }
 
-void helper(Command &command){
+void helper(Command &command, ofstream &file)
+{
     //TODO
     //recognize and execute command 识别并且执行命令
     //INFO("hehe");
@@ -96,31 +97,22 @@ int main(int argc, char const *argv[])
     single_tester.exec();
     INFO("=====================================\n");
 
-	AVL<AVL_Data_Node<int> > test;
-	AVL_Data_Node<int> a(64, 234,1);
-	AVL_Data_Node<int> b(64, 237, 2);
-	AVL_Data_Node<int> c(23, 256, 3);
-	AVL_Data_Node<int> d(75, 222, 4);
-	AVL_Data_Node<int> e(64, 236, 5);
-	//cout << a << endl;
-	/*test.insert(64);
-	test.insert(71);
-	test.insert(62);
-	test.insert(25);
-	test.insert(11);
-	test.insert(23);
-	test.insert(27);
-	test.insert(83);
-	test.insert(70);*/
+	//AVL<AVL_Data_Node<int> > test;
+	//AVL_Data_Node<int> a(64, 234,1);
+	//AVL_Data_Node<int> b(64, 237, 2);
+	//AVL_Data_Node<int> c(23, 256, 3);
+	//AVL_Data_Node<int> d(75, 222, 4);
+	//AVL_Data_Node<int> e(64, 236, 5);
+	//
 
-	//cout << "?" << endl;
-	test.insert(a);
-	test.insert(b);
-	test.insert(c);
-	test.insert(d);
-	test.insert(e);
-	
-	test.travIn(cout_T<AVL_Data_Node<int> >); cout << endl;
+	////cout << "?" << endl;
+	//test.insert(a);
+	//test.insert(b);
+	//test.insert(c);
+	//test.insert(d);
+	//test.insert(e);
+	//
+	//test.travIn(cout_T<AVL_Data_Node<int> >); cout << endl;
 	//cout << "!" << endl;
 	//cout<<test.search()
 	//test.remove(27);

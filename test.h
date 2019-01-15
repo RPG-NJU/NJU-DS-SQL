@@ -1,6 +1,12 @@
 #pragma once
 #include "common.h"
 
+
+#include "database.h"
+
+extern MyDatabase SQL;
+
+
 class Timer
 {
 public:
@@ -17,6 +23,8 @@ public:
 	char test_name[20];
 	ifstream fin;
 	ofstream fout;
+	//两个文件流用于操作，其中fout用于输出结果
+
 	Tester(const char *test_file, const char *result_file);
 	~Tester();
 	void exec();
