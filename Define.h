@@ -4,6 +4,7 @@
 #define EVERY_STEP_SHOW //每个阶段的展示输出
 //#define GET_DATAFILE_SHOW //输出读取文件的阶段
 //#define GET_RAW_DATA_SHOW //原始数据的输出（直接从文件中getline的一行输出）
+#define RUN_COMMAND_SHOW
 
 //在这一段定义一些颜色输出，用于printf的使用
 #define NONE "\033[m"

@@ -40,4 +40,44 @@ void MyDatabase::Read_Table_Name(int i, string table_name)
 	}
 }
 
+void MyDatabase::Insert(int i, Command& command)
+{
+	switch (i)
+	{
+	case 1:table1.Insert_Data(command); break;
+	case 2:table2.Insert_Data(command); break;
+	default:break;
+	}
+}
+
+void MyDatabase::Delete(int i, Command& command)
+{
+	switch (i)
+	{
+	case 1:table1.Delete_Data(command); break;
+	case 2:table2.Delete_Data(command); break;
+	default:break;
+	}
+}
+
+void MyDatabase::Set(int i, Command& command)
+{
+	switch(i)
+	{
+	case 1:table1.Set_Data(command); break;
+	case 2:table2.Set_Data(command); break;
+	default:break;
+	}
+}
+
+void MyDatabase::Add(int i, Command& command)
+{
+	switch(i)
+	{
+	case 1:break;
+	case 2:break;
+	default:break;
+	}
+}
+
 

@@ -37,6 +37,6 @@ public:
 
 static ostream& operator<<(ostream& os, const ID_Index_Node& x)
 {
-	os << "[" << x.id << " " << x.index << " " << "]";
+	os << "[" << x.id << " " << x.index << "]";
 	return os;
 }

@@ -35,6 +35,13 @@ void helper(Command &command, ofstream &file)
     //TODO
     //recognize and execute command 识别并且执行命令
     //INFO("hehe");
+	const string first_command_word(command.argv[0]);
+	if (first_command_word == "INSERT")
+		SQL.Insert(1, command);
+	else if (first_command_word == "DELETE")
+		SQL.Delete(1, command);
+	else if (first_command_word == "SET")
+		SQL.Set(1, command);
 }
 
 void loadData(const char *file)
@@ -59,16 +66,6 @@ void loadData(const char *file)
 	/*cout << get_data << endl;*/
 	getline(data_file, get_data);
 	SQL.Read_Key_List(1, get_data); //获取属性列表
-
-	//get_data.clear();
-	//getline(data_file, get_data);
-	//while(!get_data.empty())
-	//{
-	//	//
-	//	cout << get_data << endl;
-	//	get_data.clear();
-	//	getline(data_file, get_data);
-	//}
 
 	SQL.Read_Data(1, data_file);
 

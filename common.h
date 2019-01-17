@@ -6,13 +6,19 @@
 #include <cstring>
 #include <time.h>
 
-using namespace std;
+//using namespace std;
 
 #define MAX_COL_SIZE 10
 #define MAX_ATTR_LEN 30
 #define MAX_COMMAND_SEG 20
 #define MAX_COMMAND_SEG_LEN 20
 
+using std::ofstream;
+using std::ifstream;
+using std::cout;
+using std::cin;
+using std::string;
+using std::endl;
 
 #pragma warning(disable:4996) // 由于在VS环境下编译，依照助教的指示，添加此条
 

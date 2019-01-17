@@ -31,4 +31,9 @@ public:
 	void Read_Key_List(int i, string key_list);
 	void Read_Data(int i, ifstream &file);
 	void Read_Table_Name(int i, string table_name);
+
+	void Insert(int i, Command &command);
+	void Delete(int i, Command &command);
+	void Set(int i, Command &command);
+	void Add(int i, Command &command);
 };

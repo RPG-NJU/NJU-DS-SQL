@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "AVL.h"
+#include "common.h"
 //#include "AVL.h"
 #include "AVL_Data_Node.h"
 
@@ -33,6 +34,8 @@ private:
 	AVL<AVL_Data_Node<string> > name_tree;
 	GRPVector<AVL<AVL_Data_Node<int> > > value_tree;
 	//搜索树结构END
+
+	Data ERROR; //代表获取data失败
 public:
 	Table(string table_name);
 	Table();
@@ -40,9 +43,15 @@ public:
 	void Read_Table_Name(string table_name); //读取表名
 	void Read_Key_List(string key_list); //读取文件的属性列表
 	void Read_Data(std::ifstream &file); //读取所有需要的数据
+	void Insert_Data(Command &command);
+	void Delete_Data(Command &command);
+	void Set_Data(Command &command);
+
+	Data& Get_Data_By_ID(const int &id);
 
 	//下面需要维护搜索树的结构
 	void AVL_Insert_Data(const Data &data, const int &index);
+	void AVL_Reset_Data(/*const */Data &data, const int &new_value, const int &value_index); //对于value树，有些时候需要重设节点的位置，比如SET操作
 	void test1();
 	void test2();
 };

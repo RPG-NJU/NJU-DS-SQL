@@ -18,12 +18,12 @@ public:
 
 	Value_ID_Index_Node(int index, int id, T value) : index(index), id(id), value(value) { }
 	//Value_ID_Index_Node();
-	friend bool operator> <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y);
-	friend bool operator== <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y);
-	friend bool operator>= <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return x == y || x > y; }
-	friend bool operator< <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return (!(x == y)) && (!(x > y)); }
-	friend bool operator<= <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return x == y || x < y; }
-	friend bool operator!= <T>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return !(x == y); }
+	friend bool operator>(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y);
+	friend bool operator==(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y);
+	friend bool operator>=(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return x == y || x > y; }
+	friend bool operator<(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return (!(x == y)) && (!(x > y)); }
+	friend bool operator<=(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return x == y || x < y; }
+	friend bool operator!=(const Value_ID_Index_Node &x, const Value_ID_Index_Node &y) { return !(x == y); }
 
 	friend ostream& operator<< <T>(ostream &os, const Value_ID_Index_Node &x);
 };

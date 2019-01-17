@@ -17,6 +17,7 @@ Table::Table(string table_name) : table_name(table_name)
 	for (int i(0); i < 10; ++i)
 		value_tree.push_back(*(new AVL<AVL_Data_Node<int> >));
 
+	ERROR.id = INT32_MAX; //此处的异常为id是最大值
 	//cout << value_tree.size() << endl;
 }
 
@@ -59,7 +60,7 @@ void Table::Read_Key_List(string key_list)
 #endif
 
 	return;
-	}
+}
 
 void Table::Read_Data(std::ifstream& file)
 {
@@ -108,14 +109,25 @@ void Table::Read_Data(std::ifstream& file)
 		get_data_line.clear();
 		a_data.value.clear();
 		std::getline(file, get_data_line);
-		}
+	}
 #ifdef EVERY_STEP_SHOW
 	printf(LIGHT_GREEN "<DATA SIZE>  " NONE);
 	cout << data.size() << " lines" << endl;
 #endif
 
-	test2();
-	}
+	//test2();
+}
+
+Data& Table::Get_Data_By_ID(const int& id)
+{
+	const AVL_Data_Node<int> place_data(id, 0, 0);
+	BinNode<AVL_Data_Node<int> > *&which = id_tree.search(place_data);
+	if (which)
+		return data[which->data._index[0].index]; //因为对应的ID只有一条数据
+	else
+		return ERROR; //返回错误标志
+}
+
 
 
 void Table::AVL_Insert_Data(const Data &data, const int &index)
@@ -136,6 +148,124 @@ void Table::AVL_Insert_Data(const Data &data, const int &index)
 	return;
 }
 
+void Table::Insert_Data(Command& command)
+{
+	Data x;
+	x.valid = true; //再进行一次强制赋值，理论上不需要
+	x.id = atoi(command.argv[1]);
+	x.name = command.argv[2];
+	for (int i(3); i < command.argc; ++i)
+		x.value.push_back(atoi(command.argv[i]));
+	data.push_back(x);
+	AVL_Insert_Data(x, data.size() - 1);
+#ifdef RUN_COMMAND_SHOW
+	printf(LIGHT_BLUE "<COMMAND INSERT>  " NONE);
+	cout << x << " ";
+	printf(LIGHT_BLUE "OVER" NONE);
+	cout << endl;
+#endif
+	//cout << data.size() << endl; //验证在数据表中是否真的添加成功
+	return;
+}
+
+void Table::Delete_Data(Command& command)
+{
+	switch (command.argc)
+	{
+	case 2:
+	{
+		//单点删除
+		const AVL_Data_Node<int> delete_place(atoi(command.argv[1]), 0, 0); //查找节点的data
+		BinNode<AVL_Data_Node<int> > *&which = id_tree.search(delete_place);
+		if (which)
+		{
+			//此时需要删除的节点是存在的
+			data[which->data._index[0].index].valid = false; //将有效位置为无效，仅此而已   [伪删除]
+#ifdef RUN_COMMAND_SHOW
+			printf(LIGHT_BLUE "<DELETE POINT>  " NONE);
+			cout << data[which->data._index[0].index];
+			cout << " ";
+			printf(LIGHT_BLUE "OVER" NONE);
+			cout << endl;
+#endif
+
+		}
+	}break;
+	case 3:
+	{
+		assert(0);
+		//区间删除
+	}break;
+	default:break;
+	}
+	return;
+}
+
+void Table::Set_Data(Command& command)
+{
+	switch (command.argc)
+	{
+	case 4:
+	{
+		//单点测试
+		Data &set_place_data = Get_Data_By_ID(atoi(command.argv[1]));
+		if (set_place_data.id == ERROR.id)
+			break;//如果返回的是错误节点，则直接退出该层循环
+		const string key_name = command.argv[2];
+		const int new_value = atoi(command.argv[3]);
+		int key_index = 0;
+		for (; key_index < key.size(); ++key_index)
+		{
+			if (key_name == key[key_index])
+				break;
+		}
+		if (key_index == key.size())
+			break;//此时该属性不存在
+
+#ifdef RUN_COMMAND_SHOW
+		printf(LIGHT_BLUE "<SET POINT>  " NONE);
+		cout << set_place_data << " ";
+#endif
+		AVL_Reset_Data(set_place_data, new_value, key_index);
+#ifdef RUN_COMMAND_SHOW
+		cout << "=> " << set_place_data;
+		printf(LIGHT_BLUE " OVER" NONE);
+		cout << endl;
+#endif
+
+	}break;
+	case 5:
+	{
+		assert(0);
+		//区间测试
+	}break;
+	default:break;
+	}
+}
+
+void Table::AVL_Reset_Data(/*const */Data& data, const int& new_value, const int& value_index)
+{
+	const int data_id = data.id;
+	const AVL_Data_Node<int> delete_place_data(data.value[value_index], 0, 0);
+	const ID_Index_Node index_node(data_id, 0);
+	BinNode<AVL_Data_Node<int> > *&delete_place = value_tree[value_index].search(delete_place_data);
+	const int delete_index = delete_place->data._index.find(index_node);
+	const int data_index = delete_place->data._index[delete_index].index; //找到数据的索引
+	delete_place->data._index.erase(delete_index); //将节点的index索引中的该index删除
+	//Data new_data = data;
+	data.value[value_index] = new_value;
+	//cout << "?" << endl;
+	AVL_Insert_Data(data, data_index);
+}
+
+
+
+
+
+
+
+
+//自定义脱离框架的测试函数
 void Table::test1()
 {
 	AVL_Data_Node<int> x(998911, 0, 0);
@@ -148,7 +278,8 @@ void Table::test1()
 void Table::test2()
 {
 	AVL_Data_Node<int> x(72, 0, 0);
-	BinNode<AVL_Data_Node<int> > *find = value_tree[0].search(x);
+	BinNode<AVL_Data_Node<int> > *&find = value_tree[0].search(x);
+	find = find->succ();
 	for (int i(0); i < find->data._index.size(); ++i)
 		//cout << data[find->data._index[i].index].id << endl;
 		cout << data[find->data._index[i].index] << endl;

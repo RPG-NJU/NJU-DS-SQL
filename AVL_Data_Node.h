@@ -80,8 +80,13 @@ void AVL_Data_Node<T>::Add(const ID_Index_Node x)
 			_index.insert(i, x);
 			return;
 		}
+		else if (x == _index[i])
+		{
+			return;
+		}
 	}
 	//cout << _index[0] <<"-"<< _index[1] << endl;
+	cout << "[" << x << " " << _index[0] <<"]"<< endl;
 	assert(0);
 }
 
