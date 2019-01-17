@@ -36,4 +36,6 @@ public:
 	void Delete(int i, Command &command);
 	void Set(int i, Command &command);
 	void Add(int i, Command &command);
+	void Query(int i, Command &command, ofstream &file);
+	void SUM(int i, Command &command, ofstream &file);
 };

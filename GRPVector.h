@@ -167,6 +167,7 @@ void GRPVector<T>::insert(int i, const T& add)
 	if (i < real_size)
 	{
 		this->push_back(this->back());//将最后一位的数据在填充一次，供扩展
+		//++real_size;
 		for (int j(i); j < real_size - 1; ++j)
 		{
 			(*this)[j + 1] = (*this)[j];
@@ -191,7 +192,7 @@ void GRPVector<T>::erase(int i)
 			data[j] = data[j + 1]; //2019.1.16 UPDATE 减少函数的调用可以加快一定的运行速度，但是复杂化了代码
 		}
 		this->pop_back();
-		--real_size; //2019.1.16 DEBUG 此处应该更改大小，同步
+		//--real_size; //2019.1.16 DEBUG 此处应该更改大小，同步
 	}
 	else
 	{

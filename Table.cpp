@@ -9,7 +9,14 @@ ostream& operator<<(ostream& os, Data data)
 	return os;
 }
 
-
+std::ofstream& operator<<(std::ofstream& file, Data data)
+{
+	file << data.id << " " << data.name;
+	const int value_list_len(data.value.size());
+	for (int i(0); i < value_list_len; ++i)
+		file << " " << data.value[i];
+	return file;
+}
 
 
 Table::Table(string table_name) : table_name(table_name)
@@ -128,6 +135,16 @@ Data& Table::Get_Data_By_ID(const int& id)
 		return ERROR; //返回错误标志
 }
 
+int Table::Get_Key_Index(const string& key_name)
+{
+	int key_index(0);
+	for (; key_index < key.size(); ++key_index)
+	{
+		if (key_name == key[key_index])
+			return key_index;
+	}
+	return -1;
+}
 
 
 void Table::AVL_Insert_Data(const Data &data, const int &index)
@@ -193,8 +210,39 @@ void Table::Delete_Data(Command& command)
 	}break;
 	case 3:
 	{
-		assert(0);
+		//assert(0);
 		//区间删除
+		const AVL_Data_Node<int> begin_data(atoi(command.argv[1]), 0, 0);
+		const AVL_Data_Node<int> end_data(atoi(command.argv[2]), 0, 0);
+		BinNode<AVL_Data_Node<int> > *begin_node = id_tree.search(begin_data);
+		if (begin_node == nullptr)
+		{
+			begin_node = id_tree._hot;
+			while (begin_node->data.value < atoi(command.argv[1]))
+				begin_node = begin_node->succ();
+		}
+		BinNode<AVL_Data_Node<int> > *end_node = id_tree.search(end_data);
+		if (end_node == nullptr)
+		{
+			end_node = id_tree._hot;
+			while (end_node->data.value < atoi(command.argv[2]))
+				end_node = end_node->succ();
+		}
+		int count(0);
+		while (begin_node != end_node->succ())
+		{
+			++count;
+			data[begin_node->data._index[0].index].valid = false;
+			begin_node = begin_node->succ();
+		}
+#ifdef RUN_COMMAND_SHOW
+		printf(LIGHT_BLUE "<DELETE SECTION>  " NONE);
+		cout << count <<" lines";
+		cout << " ";
+		printf(LIGHT_BLUE "OVER" NONE);
+		cout << endl;
+#endif
+
 	}break;
 	default:break;
 	}
@@ -236,12 +284,119 @@ void Table::Set_Data(Command& command)
 	}break;
 	case 5:
 	{
-		assert(0);
+		//assert(0);
 		//区间测试
+		const int value_index = Get_Key_Index(command.argv[3]);
+		const int new_value = atoi(command.argv[4]);
+		if (value_index == -1)
+			break;
+		const AVL_Data_Node<int> begin_data(atoi(command.argv[1]), 0, 0);
+		const AVL_Data_Node<int> end_data(atoi(command.argv[2]), 0, 0);
+		int count(0);
+		BinNode<AVL_Data_Node<int> > *begin_node = id_tree.search(begin_data);
+		if (begin_node == nullptr)
+		{
+			begin_node = id_tree._hot;
+			while (begin_node->data.value < atoi(command.argv[1]))
+				begin_node = begin_node->succ();
+		}
+		BinNode<AVL_Data_Node<int> > *end_node = id_tree.search(end_data);
+		if (end_node == nullptr)
+		{
+			end_node = id_tree._hot;
+			while (end_node->data.value > atoi(command.argv[2]))
+				end_node = end_node->pred();
+		}
+
+		while (begin_node != end_node->succ()) //循环区间
+		{
+			++count;
+			AVL_Reset_Data(data[begin_node->data._index[0].index], new_value, value_index);
+			//cout << value_index << endl;
+			begin_node = begin_node->succ();
+		}
+#ifdef RUN_COMMAND_SHOW
+		printf(LIGHT_BLUE "<SET SECTION>  " NONE);
+		cout << count << " lines" << endl;
+#endif
 	}break;
 	default:break;
 	}
 }
+
+
+
+
+
+void Table::Add_Data(Command& command)
+{
+	switch (command.argc)
+	{
+	case 4:
+	{
+		//单点测试
+		Data &target_data = Get_Data_By_ID(atoi(command.argv[1]));
+		if (target_data.id == ERROR.id)
+			break; //返回的是错误节点
+		const int value_index = Get_Key_Index(command.argv[2]);
+		if (value_index == -1)
+			break;//此时也是错误的索引值
+
+#ifdef RUN_COMMAND_SHOW
+		printf(LIGHT_BLUE "<ADD POINT>  " NONE);
+		cout << target_data << " ";
+#endif
+		const int new_value = target_data.value[value_index] + atoi(command.argv[3]); //得到新的值
+		AVL_Reset_Data(target_data, new_value, value_index);
+
+#ifdef RUN_COMMAND_SHOW
+		cout << "=> " << target_data;
+		printf(LIGHT_BLUE " OVER" NONE);
+		cout << endl;
+#endif
+	}break;
+	case 5:
+	{
+		//assert(0);
+		//区间测试
+		const int value_index = Get_Key_Index(command.argv[3]);
+		//const int new_value = atoi(command.argv[4]);
+		if (value_index == -1)
+			break;
+		const AVL_Data_Node<int> begin_data(atoi(command.argv[1]), 0, 0);
+		const AVL_Data_Node<int> end_data(atoi(command.argv[2]), 0, 0);
+		int count(0);
+		BinNode<AVL_Data_Node<int> > *begin_node = id_tree.search(begin_data);
+		if (begin_node == nullptr)
+		{
+			begin_node = id_tree._hot;
+			while (begin_node->data.value < atoi(command.argv[1]))
+				begin_node = begin_node->succ();
+		}
+		BinNode<AVL_Data_Node<int> > *end_node = id_tree.search(end_data);
+		if (end_node == nullptr)
+		{
+			end_node = id_tree._hot;
+			while (end_node->data.value > atoi(command.argv[2]))
+				end_node = end_node->pred();
+		}
+
+		while (begin_node != end_node->succ()) //循环区间
+		{
+			++count;
+			AVL_Reset_Data(data[begin_node->data._index[0].index], data[begin_node->data._index[0].index].value[value_index] + atoi(command.argv[4]), value_index);
+			begin_node = begin_node->succ();
+		}
+#ifdef RUN_COMMAND_SHOW
+		printf(LIGHT_BLUE "<ADD SECTION>  " NONE);
+		cout << count << " lines" << endl;
+#endif
+	}break;
+	default:break;
+	}
+}
+
+
 
 void Table::AVL_Reset_Data(/*const */Data& data, const int& new_value, const int& value_index)
 {
@@ -250,6 +405,11 @@ void Table::AVL_Reset_Data(/*const */Data& data, const int& new_value, const int
 	const ID_Index_Node index_node(data_id, 0);
 	BinNode<AVL_Data_Node<int> > *&delete_place = value_tree[value_index].search(delete_place_data);
 	const int delete_index = delete_place->data._index.find(index_node);
+	if (delete_index == -1)
+	{
+		printf(LIGHT_RED "<VALUE TREE WRONG>\n" NONE);
+		return;
+	}
 	const int data_index = delete_place->data._index[delete_index].index; //找到数据的索引
 	delete_place->data._index.erase(delete_index); //将节点的index索引中的该index删除
 	//Data new_data = data;
@@ -257,11 +417,6 @@ void Table::AVL_Reset_Data(/*const */Data& data, const int& new_value, const int
 	//cout << "?" << endl;
 	AVL_Insert_Data(data, data_index);
 }
-
-
-
-
-
 
 
 

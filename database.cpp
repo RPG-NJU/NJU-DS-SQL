@@ -74,10 +74,30 @@ void MyDatabase::Add(int i, Command& command)
 {
 	switch(i)
 	{
-	case 1:break;
-	case 2:break;
+	case 1:table1.Add_Data(command); break;
+	case 2:table2.Add_Data(command); break;
 	default:break;
 	}
 }
 
+void MyDatabase::Query(int i, Command& command, ofstream& file)
+{
+	switch(i)
+	{
+	case 1:table1.Query_Data(command, file); break;
+	case 2:table2.Query_Data(command, file); break;
+	default:break;
+	}
+}
+
+
+void MyDatabase::SUM(int i, Command& command, ofstream& file)
+{
+	switch(i)
+	{
+	case 1:table1.Sum_Data(command, file); break;
+	case 2:table2.Sum_Data(command, file); break;
+	default:break;
+	}
+}
 

@@ -7,6 +7,10 @@
 #include "common.h"
 //#include "AVL.h"
 #include "AVL_Data_Node.h"
+#include <algorithm>
+
+using std::sort;
+using std::stable_sort;
 
 struct Data;
 
@@ -43,11 +47,28 @@ public:
 	void Read_Table_Name(string table_name); //读取表名
 	void Read_Key_List(string key_list); //读取文件的属性列表
 	void Read_Data(std::ifstream &file); //读取所有需要的数据
+
+	//一部分功能函数定义在这里
+	Data& Get_Data_By_ID(const int &id);
+	int Get_Key_Index(const string &key_name);
+	//void printf
+	void Equal_Data(BinNode<AVL_Data_Node<int> > *&find_result, ofstream &file);
+	void After_Data(BinNode<AVL_Data_Node<int> > *begin_node, ofstream &file/*, const int &value_index*/);
+	void Before_Data(BinNode<AVL_Data_Node<int> > *begin_node, BinNode<AVL_Data_Node<int> > *end_node, ofstream &file/*, const int &value_index*/);
+	void Equal_Data_Section(BinNode<AVL_Data_Node<int> > *&find_result, ofstream &file, int l, int r);
+	void After_Data_Section(BinNode<AVL_Data_Node<int> > *begin_node, ofstream &file, int l, int r);
+	void Before_Data_Section(BinNode<AVL_Data_Node<int> > *begin_node, BinNode<AVL_Data_Node<int> > *end_node, ofstream &file, int l, int r);
+	//END
+
+
 	void Insert_Data(Command &command);
 	void Delete_Data(Command &command);
 	void Set_Data(Command &command);
+	void Add_Data(Command &command);
+	void Query_Data(Command &command, ofstream &file);
+	void Sum_Data(Command &command, ofstream &file);
 
-	Data& Get_Data_By_ID(const int &id);
+	
 
 	//下面需要维护搜索树的结构
 	void AVL_Insert_Data(const Data &data, const int &index);

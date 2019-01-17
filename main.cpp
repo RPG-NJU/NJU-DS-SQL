@@ -22,7 +22,10 @@
  * 
  */
 
-MyDatabase SQL; //定义全局变量，方便使用
+MyDatabase SQL2;
+MyDatabase SQL1;
+MyDatabase SQL0; //定义全局变量，方便使用
+
 
 template <typename T>
 void cout_T(T data)
@@ -35,13 +38,58 @@ void helper(Command &command, ofstream &file)
     //TODO
     //recognize and execute command 识别并且执行命令
     //INFO("hehe");
-	const string first_command_word(command.argv[0]);
-	if (first_command_word == "INSERT")
-		SQL.Insert(1, command);
-	else if (first_command_word == "DELETE")
-		SQL.Delete(1, command);
-	else if (first_command_word == "SET")
-		SQL.Set(1, command);
+	if (TEST_TYPE == 0)
+	{
+		const string first_command_word(command.argv[0]);
+		if (first_command_word == "INSERT")
+			SQL0.Insert(1, command);
+		else if (first_command_word == "DELETE")
+			SQL0.Delete(1, command);
+		else if (first_command_word == "SET")
+			SQL0.Set(1, command);
+		else if (first_command_word == "ADD")
+			SQL0.Add(1, command);
+		else if (first_command_word == "QUERY")
+			SQL0.Query(1, command, file);
+		else
+			printf(LIGHT_RED "<CANNOT DO THIS COMMAND>\n" NONE);
+	}
+	else if (TEST_TYPE == 1)
+	{
+		const string first_command_word(command.argv[0]);
+		if (first_command_word == "INSERT")
+			SQL1.Insert(1, command);
+		else if (first_command_word == "DELETE")
+			SQL1.Delete(1, command);
+		else if (first_command_word == "SET")
+			SQL1.Set(1, command);
+		else if (first_command_word == "ADD")
+			SQL1.Add(1, command);
+		else if (first_command_word == "QUERY")
+			SQL1.Query(1, command, file);
+		else if (first_command_word == "SUM")
+			SQL1.SUM(1, command, file);
+		else
+			printf(LIGHT_RED "<CANNOT DO THIS COMMAND>\n" NONE);
+	}
+	else if (TEST_TYPE == 2)
+	{
+		const string first_command_word(command.argv[0]);
+		if (first_command_word == "INSERT")
+			SQL2.Insert(1, command);
+		else if (first_command_word == "DELETE")
+			SQL2.Delete(1, command);
+		else if (first_command_word == "SET")
+			SQL2.Set(1, command);
+		else if (first_command_word == "ADD")
+			SQL2.Add(1, command);
+		else if (first_command_word == "QUERY")
+			SQL2.Query(1, command, file);
+		else if (first_command_word == "SUM")
+			SQL2.SUM(1, command, file);
+		else
+			printf(LIGHT_RED "<CANNOT DO THIS COMMAND>\n" NONE);
+	}
 }
 
 void loadData(const char *file)
@@ -62,13 +110,33 @@ void loadData(const char *file)
 	//确定文件打开成功
 	string get_data;
 	getline(data_file, get_data);
-	SQL.Read_Table_Name(1, get_data); //获取表名
-	/*cout << get_data << endl;*/
-	getline(data_file, get_data);
-	SQL.Read_Key_List(1, get_data); //获取属性列表
+	if (TEST_TYPE == 0)
+	{
+		SQL0.Read_Table_Name(1, get_data); //获取表名
+		/*cout << get_data << endl;*/
+		getline(data_file, get_data);
+		SQL0.Read_Key_List(1, get_data); //获取属性列表
 
-	SQL.Read_Data(1, data_file);
+		SQL0.Read_Data(1, data_file);
+	}
+	if (TEST_TYPE == 1)
+	{
+		SQL1.Read_Table_Name(1, get_data); //获取表名
+		/*cout << get_data << endl;*/
+		getline(data_file, get_data);
+		SQL1.Read_Key_List(1, get_data); //获取属性列表
 
+		SQL1.Read_Data(1, data_file);
+	}
+	if (TEST_TYPE == 2)
+	{
+		SQL2.Read_Table_Name(1, get_data); //获取表名
+		/*cout << get_data << endl;*/
+		getline(data_file, get_data);
+		SQL2.Read_Key_List(1, get_data); //获取属性列表
+
+		SQL2.Read_Data(1, data_file);
+	}
 }
 
 int TEST_TYPE = 0; //根据不同的type进行不同的数据结构操作   [拟定]
@@ -83,9 +151,10 @@ int main(int argc, char const *argv[])
 	//printf(LIGHT_BLUE "%s\n" NONE, "<GRP DS-SQL>");
 
     SingleTester single_tester("single.txt", "result_single.txt");
-    /*SectionTester section_tester1("section1.txt", "result_section1.txt");
+    SectionTester section_tester1("section1.txt", "result_section1.txt");
+	
     SectionTester section_tester2("section2.txt", "result_section2.txt");
-    SetTester set_tester("set.txt", "result_set.txt");*/
+    //SetTester set_tester("set.txt", "result_set.txt");
     //
     //单点测试
     TEST_TYPE = 0;
@@ -115,18 +184,18 @@ int main(int argc, char const *argv[])
 	//test.remove(27);
 	//test.travIn(cout_T<int>); cout << endl;
     ////区间测试1
-    //TEST_TYPE = 1;
-    //loadData("data_section1.txt");
-    //INFO("=====================================");
-    //section_tester1.exec();
-    //INFO("=====================================\n");
+    TEST_TYPE = 1;
+    loadData("data_section1.txt");
+    INFO("=====================================");
+    section_tester1.exec();
+    INFO("=====================================\n");
 
     ////区间测试2
-    //TEST_TYPE = 2;
-    //loadData("data_section2.txt");
-    //INFO("=====================================");
-    //section_tester2.exec();
-    //INFO("=====================================\n");
+    TEST_TYPE = 2;
+    loadData("data_section2.txt");
+    INFO("=====================================");
+    section_tester2.exec();
+    INFO("=====================================\n");
 
     ////集合测试
     //TEST_TYPE = 3;

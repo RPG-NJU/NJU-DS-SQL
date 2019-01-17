@@ -25,3 +25,4 @@
 #define WHITE "\033[1;37m"
 //END define word color
 
+//#define NDEBUG

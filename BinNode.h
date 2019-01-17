@@ -30,6 +30,7 @@ template <typename T> struct BinNode { //二叉树节点模板类
 	BinNodePosi(T) insertAsLC(T const&); //作为当前节点的左孩子插入新节点
 	BinNodePosi(T) insertAsRC(T const&); //作为当前节点的右孩子插入新节点
 	BinNodePosi(T) succ(); //取当前节点的直接后继
+	BinNodePosi(T) pred(); //自己补充仿照的直接前驱
 	template <typename VST> void travLevel(VST&); //子树层次遍历
 	template <typename VST> void travPre(VST&); //子树先序遍历
 	template <typename VST> void travIn(VST&); //子树中序遍历
@@ -138,6 +139,27 @@ template <typename T> BinNodePosi(T) BinNode<T>::succ() { //定位节点v的直接后继
 	}
 	return s;
 }
+
+template <typename T>
+BinNode<T>* BinNode<T>::pred()
+{
+	BinNodePosi(T) s = this; //记录前驱的历史变量
+	if (lc) //如果存在左孩子，则前驱就是左孩子
+	{
+		s = lc; 
+	}
+	else if (IsRChild(*s)) //如果是右子树，则前驱是其父节点
+	{
+		s = s->parent;
+	}
+	else //是左孩子，且没有左子树
+	{
+		while (IsLChild(*s)) s = s->parent;
+		s = s->parent;
+	}
+	return s;
+}
+
 
 template <typename T> template <typename VST> //元素类型、操作器
 void BinNode<T>::travIn(VST& visit) { //二叉树中序遍历算法统一入口

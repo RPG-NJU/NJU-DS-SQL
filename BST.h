@@ -3,8 +3,9 @@
 #include "BinTree.h" //引入BinTree
 
 template <typename T> class BST : public BinTree<T> { //由BinTree派生BST模板类
-protected:
+public:
 	BinNodePosi(T) _hot; //“命中”节点的父亲
+protected:
 	BinNodePosi(T) connect34( //按照“3 + 4”结构，联接3个节点及四棵子树
 		BinNodePosi(T), BinNodePosi(T), BinNodePosi(T),
 		BinNodePosi(T), BinNodePosi(T), BinNodePosi(T), BinNodePosi(T));
