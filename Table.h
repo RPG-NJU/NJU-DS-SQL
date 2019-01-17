@@ -28,7 +28,8 @@ struct Data //该类型用于存储每一条数据
 
 class Table
 {
-private:
+	friend class MyDatabase;
+public:
 	string table_name; //数据表的名称，从文件的第一行读入
 	GRPVector<string> key; //每一个属性的名称
 	GRPVector<Data> data; //数据表
@@ -75,4 +76,6 @@ public:
 	void AVL_Reset_Data(/*const */Data &data, const int &new_value, const int &value_index); //对于value树，有些时候需要重设节点的位置，比如SET操作
 	void test1();
 	void test2();
+
+	string Name() { return table_name; }
 };

@@ -146,7 +146,8 @@ BinNode<T>* BinNode<T>::pred()
 	BinNodePosi(T) s = this; //记录前驱的历史变量
 	if (lc) //如果存在左孩子，则前驱就是左孩子
 	{
-		s = lc; 
+		s = lc;
+		while (HasRChild(*s)) s = s->rc;
 	}
 	else if (IsRChild(*s)) //如果是右子树，则前驱是其父节点
 	{

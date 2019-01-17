@@ -71,6 +71,7 @@ void Table::Read_Key_List(string key_list)
 
 void Table::Read_Data(std::ifstream& file)
 {
+	//cout << "START READ" << endl;
 	std::stringstream data_line;
 	string get_data_line, word;
 	Data a_data;

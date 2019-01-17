@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include "Define.h"
 
 using std::cout;
 using std::cin;
@@ -121,9 +122,11 @@ T& GRPVector<T>::operator[](int i)
 
 	else
 	{
+		printf(LIGHT_RED);
 		cout << "This GRPVector's size is " << real_size << endl;
 		cout << "You should not read the place [" << i << "]" << endl;
-		exit(-1);
+		printf(NONE);
+		//exit(-1);
 	}
 }
 

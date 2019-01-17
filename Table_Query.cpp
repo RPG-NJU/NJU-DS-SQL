@@ -358,8 +358,131 @@ void Table::Query_Data(Command& command, ofstream& file)
 				cout << endl;
 			}
 		}
+
+		else //这个时候输出的是第K大的数据
+		{
+			const int value_index = Get_Key_Index(command.argv[1]);
+			if (value_index == -1) break; //此时是异常
+			const AVL_Data_Node<int> head_data(INT32_MIN, 0, 0);
+			BinNode<AVL_Data_Node<int> > *head = value_tree[value_index].search(head_data);
+			head = value_tree[value_index]._hot;
+			const AVL_Data_Node<int> end_data(INT32_MAX, 0, 0);
+			BinNode<AVL_Data_Node<int> > *end = value_tree[value_index].search(end_data);
+			end = value_tree[value_index]._hot;
+			int count(0);
+			const int k(atoi(command.argv[2]));
+			if (asc_or_desc == "DESC")
+			{
+				while (head != end->succ())
+				{
+					for (int i(0); i < head->data._index.size(); ++i)
+					{
+						if (data[head->data._index[i].index].valid)
+							++count;
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+							file << data[head->data._index[i].index] << endl;
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY K>  " NONE);
+							cout << data[head->data._index[i].index];
+							printf(LIGHT_BLUE " OVER\n" NONE);
+#endif
+							return;
+						}
+					}
+					head = head->succ();
+				}
+			}
+			else
+			{
+				while (end != head->pred())
+				{
+					for (/*int i(end->data._index.size() - 1); i >= 0; --i*/int i(0); i < end->data._index.size(); ++i)
+					{
+						if (data[end->data._index[i].index].valid)
+							++count;
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+							file << data[end->data._index[i].index] << endl;
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY K>  " NONE);
+							cout << data[end->data._index[i].index];
+							printf(LIGHT_BLUE " OVER\n" NONE);
+#endif
+							return;
+						}
+					}
+					end = end->pred();
+				}
+			}
+		}
 	}break;
 
+	case 5:
+	{
+		const string asc_or_desc(command.argv[4]); //升序还是降序
+		if (asc_or_desc != "ASC" && asc_or_desc != "DESC")
+			break;
+
+		const int value_index = Get_Key_Index(command.argv[1]);
+		if (value_index == -1) break; //此时是异常
+		const AVL_Data_Node<int> head_data(INT32_MIN, 0, 0);
+		BinNode<AVL_Data_Node<int> > *head = value_tree[value_index].search(head_data);
+		head = value_tree[value_index]._hot;
+		const AVL_Data_Node<int> end_data(INT32_MAX, 0, 0);
+		BinNode<AVL_Data_Node<int> > *end = value_tree[value_index].search(end_data);
+		end = value_tree[value_index]._hot;
+		int count(0);
+		const int k(atoi(command.argv[2]));
+		if (asc_or_desc == "DESC")
+		{
+			while (head != end->succ())
+			{
+				for (int i(0); i < head->data._index.size(); ++i)
+				{
+					if (data[head->data._index[i].index].valid)
+					{
+						file << data[head->data._index[i].index] << endl;
+						++count;
+					}
+					if (count == k)
+					{
+						//此时就找到了要输出的位置
+#ifdef RUN_COMMAND_SHOW
+						printf(LIGHT_BLUE "<QUERY LIST K>  OVER\n");
+#endif
+					return;
+					}
+				}
+				head = head->succ();
+			}
+		}
+		else
+		{
+			while (end != head->pred())
+			{
+				for (/*int i(end->data._index.size() - 1); i >= 0; --i*/int i(0); i < end->data._index.size(); ++i)
+				{
+					if (data[end->data._index[i].index].valid)
+					{
+						file << data[end->data._index[i].index] << endl;
+						++count;
+					}
+					if (count == k)
+					{
+						//此时就找到了要输出的位置
+#ifdef RUN_COMMAND_SHOW
+						printf(LIGHT_BLUE "<QUERY LIST K>  OVER\n");
+#endif
+						return;
+					}
+				}
+				end = end->pred();
+			}
+		}
+	}
 	case 6:
 	{
 		const string asc_or_desc(command.argv[5]);
@@ -420,7 +543,7 @@ void Table::Query_Data(Command& command, ofstream& file)
 					BinNode<AVL_Data_Node<int> > *end_node = value_tree[value_index]._hot;
 					while (end_node->data.value <= atoi(command.argv[3]))
 						end_node = end_node->succ();
-					Before_Data_Section(head, end_node, file, left ,right);
+					Before_Data_Section(head, end_node, file, left, right);
 				}
 			}
 			else if (compare_rule == "<=")
@@ -484,9 +607,149 @@ void Table::Query_Data(Command& command, ofstream& file)
 		}
 		else
 		{
-			printf(LIGHT_RED "<非朴素查找空缺>\n" NONE);
+			//printf(LIGHT_RED "<非朴素查找空缺>\n" NONE);
+			//const string asc_or_desc(command.argv[4]); //升序还是降序
+
+			const int left = atoi(command.argv[1]);
+			const int right = atoi(command.argv[2]); //找到左右区间的标志
+			const int value_index = Get_Key_Index(command.argv[3]);
+			//cout << value_index << endl;
+			if (value_index == -1) break; //此时是异常
+			const AVL_Data_Node<int> head_data(INT32_MIN, 0, 0);
+			BinNode<AVL_Data_Node<int> > *head = value_tree[value_index].search(head_data);
+			head = value_tree[value_index]._hot;
+			const AVL_Data_Node<int> end_data(INT32_MAX, 0, 0);
+			BinNode<AVL_Data_Node<int> > *end = value_tree[value_index].search(end_data);
+			end = value_tree[value_index]._hot;
+			int count(0);
+			const int k(atoi(command.argv[4]));
+
+			if (asc_or_desc == "DESC")
+			{
+				while (head != end->succ())
+				{
+					for (int i(0); i < head->data._index.size(); ++i)
+					{
+						if (data[head->data._index[i].index].valid && head->data._index[i].id >= left && head->data._index[i].id <= right)
+							++count;
+						//if (head->data._index[i].id > right)
+						//	break;
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+							file << data[head->data._index[i].index] << endl;
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY SECTION K>  " NONE);
+							cout << data[head->data._index[i].index];
+							printf(LIGHT_BLUE " OVER\n" NONE);
+#endif
+							return;
+						}
+					}
+					head = head->succ();
+				}
+			}
+			else
+			{
+				while (end != head->pred())
+				{
+					
+					for (int i(0); i < end->data._index.size(); ++i)
+					{
+						//cout << data[end->data._index[i].index] << endl;
+						if (data[end->data._index[i].index].valid && end->data._index[i].id >= left && end->data._index[i].id <= right)
+							++count;
+						/*if (head->data._index[i].id < left)
+							break;*/
+						//cout << count << endl;
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+							file << data[end->data._index[i].index] << endl;
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY SECTION K>  " NONE);
+							cout << data[end->data._index[i].index];
+							printf(LIGHT_BLUE " OVER\n" NONE);
+#endif
+							return;
+						}
+					}
+					end = end->pred();
+				}
+			}
 		}
 	}
+
+		case 7:
+		{
+			const string asc_or_desc(command.argv[6]); //升序还是降序
+			const int left = atoi(command.argv[1]);
+			const int right = atoi(command.argv[2]); //找到左右区间的标志
+
+			if (asc_or_desc != "ASC" && asc_or_desc != "DESC")
+				break;
+
+			const int value_index = Get_Key_Index(command.argv[3]);
+			if (value_index == -1) break; //此时是异常
+			const AVL_Data_Node<int> head_data(INT32_MIN, 0, 0);
+			BinNode<AVL_Data_Node<int> > *head = value_tree[value_index].search(head_data);
+			head = value_tree[value_index]._hot;
+			const AVL_Data_Node<int> end_data(INT32_MAX, 0, 0);
+			BinNode<AVL_Data_Node<int> > *end = value_tree[value_index].search(end_data);
+			end = value_tree[value_index]._hot;
+			int count(0);
+			const int k(atoi(command.argv[4]));
+			if (asc_or_desc == "DESC")
+			{
+				while (head != end->succ())
+				{
+					for (int i(0); i < head->data._index.size(); ++i)
+					{
+						if (data[head->data._index[i].index].valid && data[head->data._index[i].index].id >= left && data[head->data._index[i].index].id <= right)
+						{
+							file << data[head->data._index[i].index] << endl;
+							++count;
+						}
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY LIST K>  OVER\n");
+#endif
+
+							return;
+						}
+					}
+					head = head->succ();
+				}
+			}
+			else
+			{
+				while (end != head->pred())
+				{
+					//cout << end->data.value << endl;
+					for (int i(0); i < end->data._index.size(); ++i)
+					{
+						
+						if (data[end->data._index[i].index].valid  && data[end->data._index[i].index].id >= left && data[end->data._index[i].index].id <= right)
+						{
+							file << data[end->data._index[i].index] << endl;
+							++count;
+						}
+						//cout << count << endl;
+						if (count == k)
+						{
+							//此时就找到了要输出的位置
+#ifdef RUN_COMMAND_SHOW
+							printf(LIGHT_BLUE "<QUERY LIST K>  OVER\n");
+#endif
+							return;
+						}
+					}
+					end = end->pred();
+				}
+			}
+		}break;
 	default:break;
 	}
 }
@@ -530,7 +793,7 @@ void Table::Sum_Data(Command& command, ofstream& file)
 	file << sum << endl;
 #ifdef RUN_COMMAND_SHOW
 	printf(LIGHT_BLUE "<SUM SECTION>  " NONE);
-	cout << sum ;
+	cout << sum;
 	printf(LIGHT_BLUE " OVER" NONE);
 	cout << endl;
 #endif

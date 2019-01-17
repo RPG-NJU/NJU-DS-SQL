@@ -23,11 +23,14 @@ class MyDatabase
 	//do what you want to.
 	//int haha;
 	//这里需要一些数据结构来完成整个数据库的构建
-private:
+public:
 	Table table1;
 	Table table2;
+	Table table3;
 
+	
 public:
+	int now_table = 1;
 	void Read_Key_List(int i, string key_list);
 	void Read_Data(int i, ifstream &file);
 	void Read_Table_Name(int i, string table_name);
@@ -38,4 +41,6 @@ public:
 	void Add(int i, Command &command);
 	void Query(int i, Command &command, ofstream &file);
 	void SUM(int i, Command &command, ofstream &file);
+	void Inter(Command &command, ofstream &file);
+	void Union(Command &command, ofstream &file);
 };
